@@ -27,17 +27,40 @@ import static org.fest.assertions.Assertions.*;
 */
 public class ApplicationTest {
 
-    @Test 
-    public void simpleCheck() {
-        int a = 1 + 1;
-        assertThat(a).isEqualTo(2);
-    }
-    
     @Test
     public void renderTemplate() {
         Content html = views.html.index.render("Your new application is ready.");
         assertThat(contentType(html)).isEqualTo("text/html");
         assertThat(contentAsString(html)).contains("Your new application is ready.");
+    }
+    
+    @Test
+    public void analyzeSongMissingArtist() {
+    	Result result = callAction(
+    			controllers.routes.ref.Application.analyzeSong("testTitle", "")
+    	);
+    	assertThat(status(result)).isEqualTo(BAD_REQUEST);
+    	assertThat(contentType(result)).isEqualTo("application/json");
+    	assertThat(contentAsString(result)).contains("Missing parameter 'artist'");
+    }
+    
+    @Test
+    public void analyzeSongMissingTitle() {
+    	Result result = callAction(
+    			controllers.routes.ref.Application.analyzeSong("", "testArtist")
+    	);
+    	assertThat(status(result)).isEqualTo(BAD_REQUEST);
+    	assertThat(contentType(result)).isEqualTo("application/json");
+    	assertThat(contentAsString(result)).contains("Missing parameter 'title'");
+    }
+    
+    @Test
+    public void analyzeSongGood() {
+    	Result result = callAction(
+    			controllers.routes.ref.Application.analyzeSong("testTitle", "testArtist")
+    	);
+    	assertThat(status(result)).isEqualTo(OK);
+    	assertThat(contentType(result)).isEqualTo("application/json");
     }
   
    
