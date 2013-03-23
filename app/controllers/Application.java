@@ -5,7 +5,9 @@ import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jackson.node.ArrayNode;
 
 import play.*;
+import play.libs.F.Function;
 import play.libs.Json;
+import play.libs.WS;
 import play.mvc.*;
 
 import views.html.*;
@@ -34,7 +36,24 @@ public class Application extends Controller {
     	{
     		ObjectNode resultNode = Json.newObject();
     		
-    		result = ok(resultNode);
+    		//Get song id from EchoNest API
+    		
+    		return async(
+    			WS.url("http://developer.echonest.com/api/v4/song/search")
+    				.setQueryParameter("api_key", "6QHT9QEQUS9A7BCPW")
+    				.setQueryParameter("title", title)
+    				.setQueryParameter("artist", artist)
+    				.get().map(
+    					new Function<WS.Response, Result>() {
+    						public Result apply(WS.Response response) {
+    							return ok(response.asJson());
+    						}
+    					}
+    				)
+    			 
+    		);
+    		
+    		//result = ok(resultNode);
     	}
     	
     	return result;
