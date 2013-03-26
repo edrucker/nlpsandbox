@@ -32,7 +32,7 @@ public class Application extends Controller {
     	String tempString = title + ":::" + artist; //TODO use JSON object and pass to actor
     	
     	return async(
-    		    Akka.asPromise(ask(songAnalyzer, tempString, 1000)).map(	//using 1000ms timeout
+    		    Akka.asPromise(ask(songAnalyzer, tempString, 10000)).map(	//using 1000ms timeout
     		      new Function<Object,Result>() {
     		        public Result apply(Object response) {
     		          return ok(response.toString());
@@ -69,6 +69,8 @@ public class Application extends Controller {
 				.setQueryParameter("title", title)
 				.setQueryParameter("artist", artist)
 				.get().get();
+				 
+				LyricFinder.findLyrics(title, artist);
 				
 				getContext().sender().tell(response.asJson(), instance);
 			}
