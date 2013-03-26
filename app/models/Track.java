@@ -6,7 +6,8 @@ import play.data.validation.Constraints.*;
 import javax.persistence.*;
 
 @Entity
-public class Track extends Model{
+public class Track extends Model
+{
 	
 	@Id
 	public Long id;
@@ -23,6 +24,14 @@ public class Track extends Model{
 	public static Finder<Long, Track> find = 
 			new Finder(Long.class, Track.class);
 	
+	public static void create(Track track)
+	{
+		track.save();
+	}
 	
+	public static void delete(Long id)
+	{
+		find.ref(id).delete();
+	}
 	
 }
