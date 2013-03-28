@@ -1,5 +1,7 @@
 package models;
 
+import java.util.List;
+
 import play.db.ebean.*;
 import play.data.validation.Constraints.*;
 
@@ -13,7 +15,7 @@ public class Track extends Model
 	public Long id;
 	
 	@Required
-	public String name;
+	public String title;
 	
 	@Required
 	public String artist;
@@ -23,6 +25,11 @@ public class Track extends Model
 	
 	public static Finder<Long, Track> find = 
 			new Finder(Long.class, Track.class);
+	
+	public static List<Track> all()
+	{
+		return find.all();
+	}
 	
 	public static void create(Track track)
 	{

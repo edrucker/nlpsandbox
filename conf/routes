@@ -5,8 +5,15 @@
 # Home page
 GET     /                           controllers.Application.index()
 
-# Analyze Song: default missing args to empty string and return HTTP error
-GET 	/analyzesong				controllers.Application.analyzeSong(title: String ?= "", artist: String ?= "")
+# View tracks
+GET		/tracks						controllers.Application.tracks()
+
+# Add Track
+GET		/addTrack					controllers.Application.addTrackForm()
+POST 	/addTrack					controllers.Application.addTrack()
+
+# Analyze Track: default missing args to empty string and return HTTP error
+GET 	/analyzeTrack				controllers.Application.analyzeTrack(title: String ?= "", artist: String ?= "")
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

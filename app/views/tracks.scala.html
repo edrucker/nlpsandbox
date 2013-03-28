@@ -1,0 +1,16 @@
+@(tracks: List[Track])
+
+@import helper._
+
+@main("List of known tracks") {
+
+	<h2>Stored tracks: </h2>
+	
+	<ul>
+		@for(track <- tracks) {
+			<li>
+				<a href="analyzeTrack?trackId=@track.id&artist=@track.artist&title=@track.title">@track.artist - @track.title</a>
+			</li>
+		}
+	</ul>
+}

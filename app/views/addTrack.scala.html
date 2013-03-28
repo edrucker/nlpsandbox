@@ -1,0 +1,20 @@
+@(trackForm: Form[Track])
+
+@import helper._
+
+@main("Add track lyrics") {
+    
+    <h2>Add a new track</h2>
+    
+    @form(routes.Application.addTrack()) {
+    
+    	@inputText(trackForm("artist"))
+    	
+    	@inputText(trackForm("title"))
+    	
+    	@inputText(trackForm("lyrics"))
+    	
+    	<input type="submit" value="Create">
+    }
+    
+}
