@@ -5,14 +5,20 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
+import org.codehaus.jackson.node.ObjectNode;
+
+import play.libs.Json;
+
 import com.aliasi.classify.Classification;
 import com.aliasi.classify.LMClassifier;
 
 
 public class SentimentAnalyzer
 {
-	public static String sentimentAnalysis(String text)
+	public static ObjectNode sentimentAnalysis(String text)
 	{
+		System.out.println("Analyzing sentiment of: " + text);
+		ObjectNode sentimentNode = Json.newObject();
 		LMClassifier classifier = null;
 		
 		// load serialized classifier -- TODO move to global
@@ -33,8 +39,10 @@ public class SentimentAnalyzer
 		}
 		
 		Classification classification = classifier.classify(text);
+		sentimentNode.put("classification",classification.bestCategory());
+		sentimentNode.put("classification-details", classification.toString());
 
-        return (classification.bestCategory());
+        return (sentimentNode);
 	}
 		
 }

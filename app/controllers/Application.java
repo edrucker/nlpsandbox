@@ -100,13 +100,34 @@ public class Application extends Controller {
 			else
 			{
 				Track track = (Track)message;
-				JsonNode lyricNode = LyricFinder.findLyrics(track.title, track.artist);
 				
-				//System.out.println("EDRUCKER Sentiment: " + SentimentAnalyzer.sentimentAnalysis(lyricNode.asText()));
+				// Find lyrics
+				ObjectNode analysisNode = LyricFinder.findLyrics(track.title, track.artist);
+				
+				// Get sentiment of track
+				ObjectNode sentimentNode = SentimentAnalyzer.sentimentAnalysis(analysisNode.get("lyrics").asText());
+				if(sentimentNode != null)
+				{
+					analysisNode.putAll(sentimentNode);
+				}
+				
+				// Get named entities from text-processing.com
 				TextProcessingNamedEntityRecognition tpner = new TextProcessingNamedEntityRecognition();
-				tpner.getNamedEntities(lyricNode.asText());
+				ObjectNode textProcessingNode = tpner.getNamedEntities(analysisNode.findValue("lyrics").asText());
+				if(textProcessingNode != null)
+				{
+					analysisNode.putAll(textProcessingNode);
+				}
 				
-				getContext().sender().tell(lyricNode, instance);
+				// Get named entities from TextRazor
+				TextRazorNamedEntityRecognition trner = new TextRazorNamedEntityRecognition();
+				ObjectNode textRazorNode = trner.getNamedEntities(analysisNode.findValue("lyrics").asText());
+				if(textRazorNode != null)
+				{
+					analysisNode.putAll(textRazorNode);
+				}
+				
+				getContext().sender().tell(analysisNode, instance);
 			}
 			
 		}

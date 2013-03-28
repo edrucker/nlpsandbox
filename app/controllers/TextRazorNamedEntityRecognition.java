@@ -6,9 +6,11 @@ public class TextRazorNamedEntityRecognition implements NamedEntityRecognition
 {
 
 	@Override
-	public ObjectNode getNamedEntities(String text) {
-		// TODO Auto-generated method stub
-		return null;
+	public ObjectNode getNamedEntities(String text)
+	{
+		ObjectNode namedEntities = null;
+		
+		return namedEntities;
 	}
 
 }

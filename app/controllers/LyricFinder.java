@@ -55,9 +55,9 @@ public class LyricFinder
 		return trackId;
 	}
 	
-	public static JsonNode findLyrics(String title, String artist)
+	public static ObjectNode findLyrics(String title, String artist)
 	{
-		JsonNode lyricNode = Json.newObject();	
+		ObjectNode lyricNode = Json.newObject();	
 		
 		Long trackId = findTrackId(title, artist);
 		
@@ -65,7 +65,7 @@ public class LyricFinder
 		Track currentTrack = Track.find.byId(trackId);
 		if(currentTrack != null)
 		{
-			System.out.println(currentTrack.lyrics);
+			lyricNode.put("lyrics", currentTrack.lyrics);
 		}
 		
 		else
@@ -77,13 +77,12 @@ public class LyricFinder
 					.setQueryParameter("track_id", String.valueOf(trackId.longValue()))
 					.get().get();
 
-			System.out.println("EDRUCKER: " + lyricResponse.getBody());
 			
-			lyricNode = lyricResponse.asJson()
+			lyricNode.put("lyrics", lyricResponse.asJson()
 					.findPath("message")
 					.findPath("body")
 					.findPath("lyrics")
-					.findPath("lyrics_body");
+					.findPath("lyrics_body"));
 		}
 		
 		return lyricNode;
