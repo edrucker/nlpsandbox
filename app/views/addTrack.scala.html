@@ -12,7 +12,7 @@
     	
     	@inputText(trackForm("title"))
     	
-    	@inputText(trackForm("lyrics"))
+    	@textarea(field = trackForm("lyrics"), args = 'rows -> 3, 'cols -> 50)
     	
     	<input type="submit" value="Create">
     }

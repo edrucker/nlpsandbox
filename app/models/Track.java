@@ -20,6 +20,7 @@ public class Track extends Model
 	@Required
 	public String artist;
 	
+	@Lob
 	@Required
 	public String lyrics;
 	

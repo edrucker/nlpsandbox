@@ -7,7 +7,7 @@ create table track (
   id                        bigint not null,
   title                     varchar(255),
   artist                    varchar(255),
-  lyrics                    varchar(255),
+  lyrics                    clob,
   constraint pk_track primary key (id))
 ;
 
