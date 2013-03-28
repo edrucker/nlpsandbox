@@ -52,14 +52,14 @@ public class Application extends Controller {
     	else
     	{
     		return async(
-    				Akka.asPromise(ask(trackAdder, filledForm.get(), 1000)).map(
-    					new Function<Object, Result>() {
-    						public Result apply(Object response) {
-    							return redirect(routes.Application.tracks());
-    						}
+    			Akka.asPromise(ask(trackAdder, filledForm.get(), 1000)).map(
+    				new Function<Object, Result>() {
+    					public Result apply(Object response) {
+    						return redirect(routes.Application.tracks());
     					}
-    				)
-    			);
+    				}
+    			)
+    		);
     	}
     }
     
@@ -70,14 +70,14 @@ public class Application extends Controller {
     	tempTrack.artist = artist;
     	
     	return async(
-    		    Akka.asPromise(ask(trackAnalyzer, tempTrack, 10000)).map(	//using 1000ms timeout
-    		      new Function<Object,Result>() {
-    		        public Result apply(Object response) {
-    		          return ok(response.toString());
-    		        }
-    		      }
-    		    )
-    		  );
+    		Akka.asPromise(ask(trackAnalyzer, tempTrack, 10000)).map(	//using 1000ms timeout
+    		   	new Function<Object,Result>() {
+    		   		public Result apply(Object response) {
+    		   			return ok(response.toString());
+    		   		}
+    		   	}
+    		)
+    	);
     }
     
     //Convert current error to JSON node
@@ -102,7 +102,9 @@ public class Application extends Controller {
 				Track track = (Track)message;
 				JsonNode lyricNode = LyricFinder.findLyrics(track.title, track.artist);
 				
-				System.out.println("EDRUCKER Sentiment: " + SentimentAnalyzer.sentimentAnalysis(lyricNode.asText()));
+				//System.out.println("EDRUCKER Sentiment: " + SentimentAnalyzer.sentimentAnalysis(lyricNode.asText()));
+				TextProcessingNamedEntityRecognition tpner = new TextProcessingNamedEntityRecognition();
+				tpner.getNamedEntities(lyricNode.asText());
 				
 				getContext().sender().tell(lyricNode, instance);
 			}
@@ -146,5 +148,4 @@ public class Application extends Controller {
 			
 		}
     }
-  
 }
