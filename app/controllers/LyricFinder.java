@@ -78,6 +78,15 @@ public class LyricFinder
 					.get().get();
 
 			System.out.println("EDRUCKER: " + lyricResponse.getBody());
+			
+			String lyrics = lyricResponse.asJson()
+					.findPath("message")
+					.findPath("body")
+					.findPath("lyrics")
+					.findPath("lyrics_body").asText();
+			
+			System.out.println("EDRUCKER Lyrics: " + lyrics);
+			System.out.println("EDRUCKER Sentiment: " + SentimentAnalyzer.sentimentAnalysis(lyrics));
 		}
 		
 		return lyricNode;
