@@ -65,10 +65,12 @@ public class Application extends Controller {
     
     public static Result analyzeTrack(String title, String artist) {
     	
-    	String tempString = title + ":::" + artist; //TODO use JSON object and pass to actor
+    	Track tempTrack = new Track();
+    	tempTrack.title = title;
+    	tempTrack.artist = artist;
     	
     	return async(
-    		    Akka.asPromise(ask(trackAnalyzer, tempString, 10000)).map(	//using 1000ms timeout
+    		    Akka.asPromise(ask(trackAnalyzer, tempTrack, 10000)).map(	//using 1000ms timeout
     		      new Function<Object,Result>() {
     		        public Result apply(Object response) {
     		          return ok(response.toString());
@@ -91,24 +93,18 @@ public class Application extends Controller {
 
 		@Override
 		public void onReceive(Object message) {
-			if (!(message instanceof String))
+			if (!(message instanceof Track))
 			{
 				getContext().sender().tell(TODO, instance);
 			}
 			else
 			{
-				String title = "Creep";
-				String artist = "Radiohead";
+				Track track = (Track)message;
+				JsonNode lyricNode = LyricFinder.findLyrics(track.title, track.artist);
 				
-				 Response response = WS.url("http://developer.echonest.com/api/v4/song/search")
-				.setQueryParameter("api_key", "6QHT9QEQUS9A7BCPW")
-				.setQueryParameter("title", title)
-				.setQueryParameter("artist", artist)
-				.get().get();
-				 
-				LyricFinder.findLyrics(title, artist);
+				System.out.println("EDRUCKER Sentiment: " + SentimentAnalyzer.sentimentAnalysis(lyricNode.asText()));
 				
-				getContext().sender().tell(response.asJson(), instance);
+				getContext().sender().tell(lyricNode, instance);
 			}
 			
 		}

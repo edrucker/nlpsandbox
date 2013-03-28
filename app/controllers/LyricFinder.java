@@ -55,9 +55,9 @@ public class LyricFinder
 		return trackId;
 	}
 	
-	public static ObjectNode findLyrics(String title, String artist)
+	public static JsonNode findLyrics(String title, String artist)
 	{
-		ObjectNode lyricNode = Json.newObject();	
+		JsonNode lyricNode = Json.newObject();	
 		
 		Long trackId = findTrackId(title, artist);
 		
@@ -79,14 +79,11 @@ public class LyricFinder
 
 			System.out.println("EDRUCKER: " + lyricResponse.getBody());
 			
-			String lyrics = lyricResponse.asJson()
+			lyricNode = lyricResponse.asJson()
 					.findPath("message")
 					.findPath("body")
 					.findPath("lyrics")
-					.findPath("lyrics_body").asText();
-			
-			System.out.println("EDRUCKER Lyrics: " + lyrics);
-			System.out.println("EDRUCKER Sentiment: " + SentimentAnalyzer.sentimentAnalysis(lyrics));
+					.findPath("lyrics_body");
 		}
 		
 		return lyricNode;

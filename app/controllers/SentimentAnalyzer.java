@@ -9,13 +9,13 @@ import com.aliasi.classify.Classification;
 import com.aliasi.classify.LMClassifier;
 
 
-
 public class SentimentAnalyzer
 {
 	public static String sentimentAnalysis(String text)
 	{
 		LMClassifier classifier = null;
 		
+		// load serialized classifier -- TODO move to global
 		try {	
 			FileInputStream in = new FileInputStream("classifiers\\sentiment");
 			ObjectInputStream ois = new ObjectInputStream(in);
@@ -32,9 +32,8 @@ public class SentimentAnalyzer
 			e.printStackTrace();
 		}
 		
-		Classification classification = null;
-        classification = classifier.classify(text);
-        System.out.println("classification:  " + classification);
+		Classification classification = classifier.classify(text);
+
         return (classification.bestCategory());
 	}
 		
